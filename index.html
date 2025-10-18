@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>A-Frame GLTF Augmented Reality (Fixed Blank Screen)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe-layout-component@3.0.0/dist/aframe-layout-component.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/wmurphyrd/aframe-super-hands-component@touch-events/dist/aframe-super-hands-component.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aframe-touch-controls@0.0.1/dist/aframe-touch-controls.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v7.1.0/dist/aframe-extras.min.js"></script>
+
+    <style>
+        body { margin: 0; overflow: hidden; }
+    </style>
+</head>
+<body>
+
+    <a-scene 
+        vr-mode-ui="enabled: false"
+        ar-mode-ui="enabled: true"
+        renderer="logarithmicDepthBuffer: true"
+        >
+
+        <a-entity 
+            id="rig" 
+            camera position="0 0 0">
+        </a-entity>
+        
+        <a-gltf-model 
+            src="scene.gltf" 
+            position="0 0 -3"           
+            scale="2 2 2"
+            
+            // JANGAN GUNAKAN SHADOW PADA LANTAI VIRTUAL JIKA LATAR BELAKANG ADALAH KAMERA NYATA
+            // Tapi kita biarkan komponen interaksi tetap ada:
+            grabbable                 
+            stretchable               
+            touch-scale               
+            touch-rotate>             
+        </a-gltf-model>
+
+        <a-entity light="type: ambient; color: #BBB; intensity: 0.5"></a-entity>
+        <a-entity light="type: directional; color: #FFF; intensity: 0.8" position="-1 1 1"></a-entity>
+
+    </a-scene>
+    
+</body>
+</html>
