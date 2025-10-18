@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>MindAR World Tracking (Plane Tracking)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/mindar-image@1.2.1/dist/mindar-image-aframe.prod.js"></script>
+    
+    <style>
+        body { margin: 0; overflow: hidden; }
+    </style>
+</head>
+<body style='margin: 0px; overflow: hidden;'>
+
+    <a-scene 
+        embedded 
+        vr-mode-ui="enabled: false"
+        
+        mindar-image="imageTargetSrc: ; 
+                      filterMinCF:0.0001; 
+                      filterBeta: 0.001;"
+
+        renderer="colorManagement: true;"
+        
+        cursor="rayOrigin: mouse; fuse: false;"
+        raycaster="objects: .raycast-target;"> 
+
+        <a-gltf-model 
+            id="patung-ar"
+            src="scene.gltf" 
+            position="0 -999 -999"  scale="1 1 1"
+            rotation="0 0 0">
+        </a-gltf-model>
+
+        <a-plane 
+            class="raycast-target" 
+            rotation="-90 0 0" 
+            width="100" 
+            height="100" 
+            visible="false" 
+            material="transparent: true; opacity: 0;"></a-plane>
+
+        <a-entity light="type: ambient; intensity: 0.9"></a-entity>
+        <a-entity light="type: directional; intensity: 0.8; color: #FFFFFF" position="2 3 5"></a-entity>
+
+        <a-entity camera></a-entity>
+
+    </a-scene>
+
+    <script>
+        // Logika Tap-to-Place Tetap Sama (Ini adalah Logika A-Frame Standar)
+        AFRAME.registerComponent('ar-tap-placement', {
+            init: function() {
+                const patung = document.querySelector('#patung-ar');
+                const sceneEl = this.el;
+                
+                sceneEl.addEventListener('click', function (evt) {
+                    if (evt.detail.intersection) {
+                        const intersection = evt.detail.intersection.point;
+                        
+                        patung.setAttribute('position', {
+                            x: intersection.x,
+                            y: intersection.y + 0.1, 
+                            z: intersection.z
+                        });
+                        
+                        patung.setAttribute('scale', '1 1 1'); 
+
+                        console.log('Patung ditempatkan di titik:', intersection);
+                        
+                    } else {
+                        console.log('Klik tidak mengenai target raycast.');
+                    }
+                });
+            }
+        });
+
+        // Tunggu MindAR siap sebelum menjalankan logika penempatan
+        document.querySelector('a-scene').addEventListener('mindar-started', function() {
+            document.querySelector('a-scene').setAttribute('ar-tap-placement', '');
+            console.log("MindAR Ready. Tap layar untuk menempatkan model.");
+        });
+    </script>
+</body>
+</html>
